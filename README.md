@@ -2,6 +2,9 @@
 
 Prévia de conceito para a Alvorada Cerimonial: um sobrevoo de drone em CSS 3D, seguido do conteúdo editorial do site.
 
+**Ao vivo:** [https://rcardo-sousa.github.io/alvorada/](https://rcardo-sousa.github.io/alvorada/)  
+**Código:** [github.com/Rcardo-Sousa/alvorada](https://github.com/Rcardo-Sousa/alvorada)
+
 ## Estrutura
 
 ```
@@ -15,7 +18,7 @@ Prévia de conceito para a Alvorada Cerimonial: um sobrevoo de drone em CSS 3D, 
 └── docs/               # PRODUCT.md · DESIGN.md
 ```
 
-## Como rodar
+## Como rodar localmente
 
 Node.js 20.11 ou mais recente. Não há pacotes para instalar.
 
