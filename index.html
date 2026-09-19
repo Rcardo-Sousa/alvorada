@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Alvorada — cerimonial e celebrações</title>
+<script>
+/* aplica o tema salvo antes do CSS pintar, evitando flash */
+(function () {
+  try {
+    var t = localStorage.getItem('alvorada-tema');
+    if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+  } catch (e) {}
+})();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/base.css?v=impeccable-7">
+<link rel="stylesheet" href="css/cena.css?v=impeccable-7">
+<link rel="stylesheet" href="css/site.css?v=impeccable-7">
+<script type="module" src="js/main.js"></script>
+</head>
+<body>
+
+<div class="palco" id="palco" aria-hidden="true">
+  <div class="lente" id="lente">
+    <div class="camera" id="camera">
+      <div class="mundo-wrap" id="mundoWrap">
+        <div class="mundo" id="mundo">
+          <div class="chao" id="chao"></div>
+          <div class="cenario" id="cenario"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<img class="aerea" id="aerea" src="assets/images/aerea.jpg" alt="Vista aérea de uma cerimônia de casamento ao ar livre.">
+<div class="raios" id="raios" aria-hidden="true"></div>
+<div class="bruma" id="bruma" aria-hidden="true"></div>
+<div class="vinheta" id="vinheta" aria-hidden="true"></div>
+
+<div class="hud" id="hud" aria-hidden="true">
+  <i class="canto c1"></i><i class="canto c2"></i><i class="canto c3"></i><i class="canto c4"></i>
+  <div class="rec"><i class="ponto"></i>gravando</div>
+  <div class="alt">
+    <div class="regua">
+      <i class="marca" style="top:0"></i><i class="marca" style="top:25%"></i>
+      <i class="marca" style="top:50%"></i><i class="marca" style="top:75%"></i><i class="marca" style="top:100%"></i>
+    </div>
+    <div><div class="valor" id="altValor">140 m</div><div class="rotulo">altura</div></div>
+  </div>
+</div>
+
+<div class="legendas">
+  <div class="cena c1" id="cena1">
+    <h1>Alvorada</h1>
+    <p>cerimonial e celebrações</p>
+  </div>
+  <div class="cena c2" id="cena2">
+    <h2>Visto de cima, um casamento é um desenho.</h2>
+    <div class="nota">cada detalhe tem um motivo para estar ali</div>
+  </div>
+  <div class="cena c3" id="cena3">
+    <h2>Mais perto, vira caminho.</h2>
+    <div class="nota">vinte e dois passos até o altar</div>
+  </div>
+  <div class="cena c4" id="cena4">
+    <h2>E aqui, vira um instante.</h2>
+    <div class="nota">é esse instante que a gente protege</div>
+  </div>
+  <div class="cena c5" id="cena5">
+    <h2>Deste lado, dá para ver quem veio.</h2>
+    <div class="nota">é mais ou menos isso que os noivos enxergam</div>
+  </div>
+</div>
+
+<div class="rolar" id="rolar">role para descer<span></span></div>
+
+<div class="ponte-site" id="ponte" aria-hidden="true">
+  <p>Do desenho à memória</p>
+  <a href="#conteudo">Entrar na história <span aria-hidden="true">↓</span></a>
+</div>
+
+<div class="trilho" id="trilho"></div>
+
+<canvas class="luz-rastro" id="luzRastro" aria-hidden="true"></canvas>
+
+<main id="conteudo" class="site-entrada handoff-scroll">
+  <div class="fundo-vivo" aria-hidden="true">
+    <span class="fundo-orbita o1"></span>
+    <span class="fundo-orbita o2"></span>
+    <span class="fundo-orbita o3"></span>
+    <span class="fundo-orbita o4"></span>
+    <span class="fundo-faixa f1"></span>
+    <span class="fundo-faixa f2"></span>
+    <span class="fundo-faixa f3"></span>
+  </div>
+  <i class="faixa"></i>
+  <div class="menu-reserva" aria-hidden="true"></div>
+
+  <nav class="menu-site" aria-label="Navegação principal">
+    <a class="marca" href="#conteudo" aria-label="Alvorada, início">
+      <span class="marca-sol" aria-hidden="true"></span>
+      Alvorada
+    </a>
+    <div class="menu-links">
+      <a href="#trabalhos">Histórias</a>
+      <a href="#servicos">Serviços</a>
+      <button type="button" class="tema-botao" aria-pressed="false" aria-label="Ativar modo escuro" title="Modo escuro">
+        <span class="tema-icone tema-icone-sol" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+            <circle cx="12" cy="12" r="4"/>
+            <path d="M12 2v2.5M12 19.5V22M4.5 12H2M22 12h-2.5M5.6 5.6l1.8 1.8M16.6 16.6l1.8 1.8M5.6 18.4l1.8-1.8M16.6 7.4l1.8-1.8"/>
+          </svg>
+        </span>
+        <span class="tema-icone tema-icone-lua" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 7 7 0 1 0 20 14.5z"/>
+          </svg>
+        </span>
+      </button>
+      <a class="menu-contato" href="#contato"><span class="menu-contato-texto">Vamos conversar</span><span>↗</span></a>
+    </div>
+  </nav>
+
+  <section class="abertura bloco-largo">
+    <p class="sobretitulo camada-contexto">Cerimonial &amp; direção criativa · Cuiabá Mato Grosso</p>
+    <div class="abertura-cena">
+      <h2 class="titulo-gigante">
+        <span class="linha-titulo camada-titulo1"><span class="linha-mascara">Ideias bonitas</span></span>
+        <span class="linha-titulo linha-direita camada-titulo2"><span class="linha-mascara">viram <em>memórias.</em></span></span>
+      </h2>
+      <figure class="abertura-visual camada-foto">
+        <svg class="abertura-tracos" viewBox="0 0 420 520" fill="none" aria-hidden="true">
+          <rect class="traco-quadro" x="18" y="18" width="384" height="484" rx="2"/>
+          <path class="traco-canto traco-canto-1" d="M18 78V18H78"/>
+          <path class="traco-canto traco-canto-2" d="M402 78V18H342"/>
+          <path class="traco-canto traco-canto-3" d="M18 442V502H78"/>
+          <path class="traco-canto traco-canto-4" d="M402 442V502H342"/>
+          <circle class="traco-orbita" cx="210" cy="260" r="118"/>
+          <line class="traco-raio" x1="210" y1="118" x2="210" y2="148"/>
+        </svg>
+        <div class="abertura-foto">
+          <img src="assets/images/mesa-editorial.jpg" alt="Mesa de celebração ao entardecer, com flores, velas e cadeiras de madeira." width="840" height="1040">
+        </div>
+        <figcaption class="abertura-legenda">
+          <span>O instante que a gente protege</span>
+          <span>Cuiabá Mato Grosso</span>
+        </figcaption>
+      </figure>
+    </div>
+    <div class="abertura-rodape camada-rodape">
+      <p class="abertura-numero">Manifesto</p>
+      <p>A Alvorada cria celebrações com intenção — do primeiro traço no papel ao último abraço da noite. Planejamento preciso, estética autoral e uma equipe que deixa vocês livres para sentir.</p>
+      <a class="link-seta" href="#trabalhos">Conheça nosso olhar <span>↘</span></a>
+    </div>
+  </section>
+
+  <section class="manifesto bloco-largo">
+    <figure class="imagem-editorial imagem-manifesto">
+      <img src="assets/images/casal-editorial.jpg" alt="Casal caminhando junto em um campo ao entardecer." loading="lazy">
+      <figcaption><span>Entre o sim e o sempre</span><span>Interior de Cuiabá Mato Grosso · 2025</span></figcaption>
+    </figure>
+    <div class="manifesto-texto">
+      <h3>Não seguimos fórmulas. Seguimos a história de cada casal.</h3>
+      <p>O lugar, a luz, os afetos e aquilo que só vocês entendem. Reunimos tudo em uma experiência que tem ritmo, personalidade e verdade.</p>
+      <p>Porque um casamento inesquecível não precisa parecer perfeito. Precisa parecer <em>seu.</em></p>
+    </div>
+  </section>
+
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-faixa">
+      <span>Planejar com calma</span><i class="marca-estrela"></i><span>Criar com intenção</span><i class="marca-estrela"></i><span>Celebrar por inteiro</span><i class="marca-estrela"></i>
+      <span>Planejar com calma</span><i class="marca-estrela"></i><span>Criar com intenção</span><i class="marca-estrela"></i><span>Celebrar por inteiro</span><i class="marca-estrela"></i>
+    </div>
+  </div>
+
+  <section class="trabalhos" id="trabalhos">
+    <header class="secao-cabecalho bloco-largo">
+      <div>
+        <h2>Momentos com<br><em>assinatura própria.</em></h2>
+      </div>
+      <p>Cada projeto nasce do encontro entre quem vocês são e como querem se lembrar desse dia.</p>
+    </header>
+
+    <div class="galeria bloco-largo">
+      <article class="projeto projeto-grande">
+        <a href="#contato" aria-label="Conhecer o projeto Jardim ao entardecer">
+          <div class="projeto-imagem"><img src="assets/images/mesa-editorial.jpg" alt="Mesa de casamento ao ar livre decorada com flores e velas." loading="lazy"></div>
+          <div class="projeto-info"><span>Celebração no campo</span><h3>Jardim ao entardecer</h3><span class="projeto-seta" aria-hidden="true">↗</span></div>
+        </a>
+      </article>
+      <article class="projeto projeto-retrato">
+        <a href="#contato" aria-label="Conhecer o projeto Um caminho só deles">
+          <div class="projeto-imagem"><img src="assets/images/casal-editorial.jpg" alt="Noivos caminhando em um campo iluminado pelo sol." loading="lazy"></div>
+          <div class="projeto-info"><span>Ensaio &amp; cerimônia</span><h3>Um caminho só deles</h3><span class="projeto-seta" aria-hidden="true">↗</span></div>
+        </a>
+      </article>
+      <article class="projeto projeto-detalhe">
+        <a href="#contato" aria-label="Conhecer o projeto Gestos que contam">
+          <div class="projeto-imagem"><img src="assets/images/detalhes-editorial.jpg" alt="Convite artesanal com lacre, flores e taça de cristal." loading="lazy"></div>
+          <div class="projeto-info"><span>Identidade visual</span><h3>Gestos que contam</h3><span class="projeto-seta" aria-hidden="true">↗</span></div>
+        </a>
+      </article>
+    </div>
+  </section>
+
+  <section class="servicos bloco-largo" id="servicos">
+    <header class="servicos-titulo">
+      <h2>Do panorama<br>ao <em>mínimo detalhe.</em></h2>
+    </header>
+    <div class="lista-servicos">
+      <article class="servico">
+        <h3>Planejamento completo</h3>
+        <p>Estratégia, orçamento, fornecedores e cronograma. Todas as decisões organizadas com clareza, do pedido ao pós-festa.</p>
+        <span class="servico-icone" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M7 17L17 7M9 7h8v8"/></svg>
+        </span>
+      </article>
+      <article class="servico">
+        <h3>Direção criativa</h3>
+        <p>Conceito visual, flores, luz, papelaria e ambientação conectados por uma linguagem que pertence apenas a vocês.</p>
+        <span class="servico-icone" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M7 17L17 7M9 7h8v8"/></svg>
+        </span>
+      </article>
+      <article class="servico">
+        <h3>Cerimonial do dia</h3>
+        <p>Equipe em campo, roteiro minuto a minuto e respostas rápidas para tudo acontecer com leveza, sem parecer ensaiado.</p>
+        <span class="servico-icone" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M7 17L17 7M9 7h8v8"/></svg>
+        </span>
+      </article>
+      <article class="servico">
+        <h3>Destination wedding</h3>
+        <p>Produção à distância, logística de convidados e curadoria local para celebrar onde a história de vocês pedir.</p>
+        <span class="servico-icone" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M7 17L17 7M9 7h8v8"/></svg>
+        </span>
+      </article>
+    </div>
+  </section>
+
+  <section class="processo">
+    <div class="bloco-largo">
+      <div class="processo-frase">
+        <span>Escutamos.</span>
+        <span>Imaginamos.</span>
+        <span>Realizamos.</span>
+      </div>
+      <ol class="etapas">
+        <li><span>1</span><h3>Primeiro encontro</h3><p>Uma conversa sem roteiro para conhecer a história, os desejos e o que realmente importa.</p></li>
+        <li><span>2</span><h3>O grande desenho</h3><p>Traduzimos as ideias em conceito, plano de ação, orçamento e uma equipe sob medida.</p></li>
+        <li><span>3</span><h3>Construção conjunta</h3><p>Vocês acompanham cada escolha; nós mantemos prazos, pessoas e detalhes no lugar.</p></li>
+        <li><span>4</span><h3>O dia inteiro</h3><p>Enquanto vocês celebram, conduzimos os bastidores e protegemos cada momento.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="depoimento bloco-largo">
+    <div class="depoimento-foto"><img src="assets/images/detalhes-editorial.jpg" alt="Detalhes artesanais de um convite de casamento." loading="lazy"></div>
+    <blockquote>
+      <span class="aspas" aria-hidden="true">“</span>
+      <p>A gente sentiu que cada detalhe tinha sido pensado por alguém que realmente nos ouviu. No dia, esquecemos do relógio — e isso foi o maior presente.</p>
+      <footer>Marina &amp; Caio <span>· Fazenda Santa Helena</span></footer>
+    </blockquote>
+  </section>
+
+  <section class="convite" id="contato">
+    <div class="convite-orbita" aria-hidden="true"><span>Alvorada · Cerimonial · Celebrações ·</span></div>
+    <h2>Vamos criar um dia<br>que tenha a <em>cara de vocês?</em></h2>
+    <a class="btn" href="mailto:contato@alvorada.com.br">
+      <span>Conte pra gente a data</span><span aria-hidden="true">↗</span>
+    </a>
+    <div class="contato">contato@alvorada.com.br<br>Cuiabá Mato Grosso · Brasil · Onde a história levar</div>
+  </section>
+
+  <footer class="rodape-site">
+    <a class="marca" href="#conteudo"><span class="marca-sol" aria-hidden="true"></span>Alvorada</a>
+    <p>Cerimonial &amp; celebrações com intenção.</p>
+    <div><a href="#conteudo">Voltar ao topo ↑</a><span>© 2026</span></div>
+  </footer>
+</main>
+
+</body>
+</html>

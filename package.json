@@ -1,0 +1,13 @@
+{
+  "name": "alvorada",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Sobrevoo de drone em CSS 3D — prévia de conceito Alvorada Cerimonial",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=20.11"
+  }
+}
