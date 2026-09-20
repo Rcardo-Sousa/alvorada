@@ -258,7 +258,35 @@
   .ponte-site a{backdrop-filter:none}
 }
 
-/* modo leve (celular / toque): corta o que derruba o Safari */
+/* sem drone no celular — some antes do JS e libera memória */
+html.sem-drone .palco,
+html.sem-drone .aerea,
+html.sem-drone .bruma,
+html.sem-drone .raios,
+html.sem-drone .vinheta,
+html.sem-drone .hud,
+html.sem-drone .legendas,
+html.sem-drone .rolar,
+html.sem-drone .ponte-site,
+html.sem-drone .trilho,
+html.sem-drone .luz-rastro,
+html.sem-drone .fundo-vivo{
+  display:none!important;
+  visibility:hidden!important;
+  pointer-events:none!important;
+  content-visibility:hidden
+}
+html.sem-drone .trilho{height:0!important;min-height:0!important;margin:0!important;padding:0!important}
+html.sem-drone body{background:var(--papel, #f7f2eb)}
+html.sem-drone #conteudo{
+  position:relative;z-index:10;
+  --e:1; --e-papel:1; --e-faixa:1; --e-contexto:1;
+  --e-titulo1:1; --e-titulo2:1; --e-foto:1; --e-menu:1;
+  --e-rodape:1; --e-tracos:1;
+  background:var(--papel);box-shadow:var(--sombra-main)
+}
+
+/* modo leve residual (se 3D ainda existir) */
 html.modo-leve .aerea,
 html.modo-leve .palco,
 html.modo-leve .lente,
@@ -278,7 +306,6 @@ html.modo-leve .fundo-vivo,
 html.modo-leve .luz-rastro,
 html.modo-leve .raios{display:none!important}
 html.modo-leve .noivos .veu{filter:none}
-html.modo-leve .trilho{height:480vh}
 
 @media (prefers-reduced-motion:reduce){
   .petala,.rolar span,.hud .ponto,.lanterna-fogo,.lanterna-brilho{animation:none!important}

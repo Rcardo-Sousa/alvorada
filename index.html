@@ -5,21 +5,27 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Alvorada — cerimonial e celebrações</title>
 <script>
-/* aplica o tema salvo antes do CSS pintar, evitando flash */
+/* tema + detecção mobile ANTES de pintar — evita carregar o drone no Safari */
 (function () {
   try {
     var t = localStorage.getItem('alvorada-tema');
     if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
   } catch (e) {}
+  try {
+    var mobile = window.matchMedia('(max-width: 900px)').matches
+      || window.matchMedia('(hover: none)').matches
+      || window.matchMedia('(pointer: coarse)').matches;
+    if (mobile) document.documentElement.classList.add('sem-drone', 'modo-leve');
+  } catch (e2) {}
 })();
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/base.css?v=impeccable-8">
-<link rel="stylesheet" href="css/cena.css?v=impeccable-8">
-<link rel="stylesheet" href="css/site.css?v=impeccable-8">
-<script type="module" src="js/main.js"></script>
+<link rel="stylesheet" href="css/base.css?v=impeccable-9">
+<link rel="stylesheet" href="css/cena.css?v=impeccable-9">
+<link rel="stylesheet" href="css/site.css?v=impeccable-9">
+<script type="module" src="js/main.js?v=9"></script>
 </head>
 <body>
 
@@ -36,7 +42,7 @@
   </div>
 </div>
 
-<img class="aerea" id="aerea" src="assets/images/aerea.jpg" alt="Vista aérea de uma cerimônia de casamento ao ar livre.">
+<img class="aerea" id="aerea" data-src="assets/images/aerea.jpg" alt="Vista aérea de uma cerimônia de casamento ao ar livre.">
 <div class="raios" id="raios" aria-hidden="true"></div>
 <div class="bruma" id="bruma" aria-hidden="true"></div>
 <div class="vinheta" id="vinheta" aria-hidden="true"></div>
