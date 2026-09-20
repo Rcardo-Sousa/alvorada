@@ -10,8 +10,9 @@ const PELES = ['#f0cdb0','#dfb190','#c08c66','#9a6742','#7a4f32'];
 
 /* monta tudo dentro de `cenario` e devolve a lista de peças,
    que é o que a câmera precisa para sumir com o que passa por baixo dela */
-export function montarCenario(cenario, { estreito, reduz }){
-  var pecas = [];   // o que precisa sumir quando a câmera passa por cima
+export function montarCenario(cenario, { estreito, reduz, leve }){
+  var pecas = [];
+  var lite = !!leve || !!estreito;
 
   function grupo(x, y, dx, dy, tipo){
     var g = document.createElement('div');
@@ -21,14 +22,12 @@ export function montarCenario(cenario, { estreito, reduz }){
     return g;
   }
 
-  /* luz do fim de tarde e sombra do arco, deitadas no chão */
   var decalques = grupo(0, 600, 1400, 1200, 'plano');
   var luz = document.createElement('div'); luz.className = 'luz';
   var sombra = document.createElement('div'); sombra.className = 'sombra';
   decalques.appendChild(luz); decalques.appendChild(sombra);
 
-  /* piso de pedra sob o corredor — mais largo e contrastado */
-  var PISO_INI = -280, PISO_FIM = 3700, PISO_N = estreito ? 9 : 16;
+  var PISO_INI = -280, PISO_FIM = 3700, PISO_N = lite ? 5 : 16;
   var pisoPasso = (PISO_FIM - PISO_INI) / PISO_N;
   for (var ps = 0; ps < PISO_N; ps++){
     var yP = PISO_INI + ps * pisoPasso;
@@ -41,10 +40,9 @@ export function montarCenario(cenario, { estreito, reduz }){
     gP.appendChild(laje);
   }
 
-  /* canteiros laterais — fecham o deserto de areia */
-  var nCant = estreito ? 4 : 6;
+  var nCant = lite ? 2 : 6;
   for (var cj = 0; cj < nCant; cj++){
-    var yCant = 200 + cj * 520;
+    var yCant = 200 + cj * (lite ? 900 : 520);
     canteiro(-980, yCant);
     canteiro(980, yCant);
   }
@@ -57,10 +55,9 @@ export function montarCenario(cenario, { estreito, reduz }){
     gCant.appendChild(c);
   }
 
-  /* pétalas estáticas no tapete */
-  if (!reduz){
+  if (!reduz && !lite){
     var gPetChao = grupo(0, 900, 120, 800, 'plano');
-    for (var pc = 0; pc < (estreito ? 14 : 28); pc++){
+    for (var pc = 0; pc < 28; pc++){
       var pCh = document.createElement('div');
       pCh.className = 'petala-chao';
       pCh.style.width = (7 + esc(8)) + 'px';
@@ -72,8 +69,7 @@ export function montarCenario(cenario, { estreito, reduz }){
     }
   }
 
-  /* tapete: fatiado para que cada pedaço possa sumir ao passar pela câmera */
-  var TAP_INI = -60, TAP_FIM = 3400, TAP_N = 12;
+  var TAP_INI = -60, TAP_FIM = 3400, TAP_N = lite ? 6 : 12;
   var tapPasso = (TAP_FIM - TAP_INI) / TAP_N;
   for (var s = 0; s < TAP_N; s++){
     var yA = TAP_INI + s * tapPasso;
@@ -85,7 +81,6 @@ export function montarCenario(cenario, { estreito, reduz }){
     g.appendChild(f);
   }
 
-  /* mureta / base do altar atrás do arco */
   var gMuro = grupo(0, -180, 320, 40, 'epe');
   var muro = document.createElement('div');
   muro.className = 'epe mureta';
@@ -93,7 +88,6 @@ export function montarCenario(cenario, { estreito, reduz }){
   por(muro, 0, -180, 520, 160, false);
   gMuro.appendChild(muro);
 
-  /* celebrante atrás dos noivos */
   var gCel = grupo(0, -130, 40, 24, 'epe');
   var cel = document.createElement('div');
   cel.className = 'epe celebrante';
@@ -101,10 +95,9 @@ export function montarCenario(cenario, { estreito, reduz }){
   por(cel, 0, -130, 70, 210, false);
   gCel.appendChild(cel);
 
-  /* colunas laterais do pátio + sombra no chão */
-  var nCol = estreito ? 4 : 6;
+  var nCol = lite ? 2 : 6;
   for (var ci = 0; ci < nCol; ci++){
-    var yCol = 220 + ci * (estreito ? 400 : 360);
+    var yCol = 220 + ci * (lite ? 700 : 360);
     coluna(-680, yCol, 440 + esc(36));
     coluna(680, yCol, 440 + esc(36));
   }
@@ -120,17 +113,18 @@ export function montarCenario(cenario, { estreito, reduz }){
     var el = document.createElement('div');
     el.className = 'epe coluna';
     el.style.height = h + 'px';
-    el.innerHTML = '<i class="coluna-capitel"></i><i class="coluna-base"></i><i class="coluna-canalura"></i>';
+    el.innerHTML = lite
+      ? '<i class="coluna-capitel"></i><i class="coluna-base"></i>'
+      : '<i class="coluna-capitel"></i><i class="coluna-base"></i><i class="coluna-canalura"></i>';
     por(el, x, y, 68, h, false);
     gC.appendChild(el);
   }
 
-  /* ciprestes / árvores ao fundo — fecham o horizonte */
-  var nArv = estreito ? 6 : 11;
+  var nArv = lite ? 3 : 11;
   for (var ai = 0; ai < nArv; ai++){
     var ladoA = ai % 2 === 0 ? -1 : 1;
     var xArv = ladoA * (920 + (ai % 4) * 140 + esc(70));
-    var yArv = -480 + ai * 260 + esc(50);
+    var yArv = -480 + ai * (lite ? 420 : 260) + esc(50);
     var hArv = 540 + esc(200);
     var gShA = grupo(xArv, yArv, 40, 30, 'plano');
     var shA = document.createElement('div');
@@ -147,10 +141,9 @@ export function montarCenario(cenario, { estreito, reduz }){
     gArv.appendChild(arv);
   }
 
-  /* lanternas / velas ao longo do tapete */
-  var nLan = estreito ? 5 : 9;
+  var nLan = lite ? 3 : 9;
   for (var lj = 0; lj < nLan; lj++){
-    var yLan = 340 + lj * (estreito ? 360 : 310);
+    var yLan = 340 + lj * (lite ? 520 : 310);
     lanterna(-148, yLan, lj);
     lanterna(148, yLan, lj + 4);
   }
@@ -165,8 +158,10 @@ export function montarCenario(cenario, { estreito, reduz }){
     var gL = grupo(x, y, 28, 28, 'epe');
     var el = document.createElement('div');
     el.className = 'epe lanterna';
-    el.innerHTML = '<i class="lanterna-haste"></i><i class="lanterna-copa"></i><i class="lanterna-fogo"></i><i class="lanterna-brilho"></i>';
-    if (!reduz){
+    el.innerHTML = lite
+      ? '<i class="lanterna-haste"></i><i class="lanterna-copa"></i><i class="lanterna-fogo"></i>'
+      : '<i class="lanterna-haste"></i><i class="lanterna-copa"></i><i class="lanterna-fogo"></i><i class="lanterna-brilho"></i>';
+    if (!reduz && !lite){
       el.querySelector('.lanterna-fogo').style.animationDelay = (-(idx * .7)).toFixed(1) + 's';
       el.querySelector('.lanterna-brilho').style.animationDelay = (-(idx * .7)).toFixed(1) + 's';
     }
@@ -174,12 +169,11 @@ export function montarCenario(cenario, { estreito, reduz }){
     gL.appendChild(el);
   }
 
-  /* cadeiras: encosto atrás do convidado (lado da entrada), como na foto */
-  var linhas = estreito ? 8 : 10;
-  var colunas = estreito ? 3 : 4;
+  var linhas = lite ? 4 : 10;
+  var colunas = lite ? 2 : 4;
   for (var r = 0; r < linhas; r++){
     for (var lado = -1; lado <= 1; lado += 2){
-      var yL = 420 + r * 160;
+      var yL = 420 + r * (lite ? 280 : 160);
       var gl = grupo(lado * 357, yL, 188, 60, 'epe');
       for (var c = 0; c < colunas; c++){
         var x = lado * (215 + c * 118);
@@ -190,7 +184,7 @@ export function montarCenario(cenario, { estreito, reduz }){
         por(assento, x, yL, 92, 74, true);
         gl.appendChild(assento);
 
-        if (Math.random() > 0.18){
+        if (Math.random() > (lite ? 0.35 : 0.18)){
           var gv = document.createElement('div');
           gv.className = 'epe convidado';
           gv.style.background = 'linear-gradient(180deg,' + um(ROUPAS) + ',rgba(0,0,0,.35))';
@@ -204,14 +198,15 @@ export function montarCenario(cenario, { estreito, reduz }){
         var cd = document.createElement('div');
         cd.className = 'epe cadeira';
         cd.style.transform = 'rotateZ(calc(var(--giro) + ' + jit.toFixed(1) + 'deg)) rotateX(var(--tomb))';
-        cd.innerHTML = '<div class="quadro"></div><div class="barra a"></div><div class="barra b"></div>';
+        cd.innerHTML = lite
+          ? '<div class="quadro"></div>'
+          : '<div class="quadro"></div><div class="barra a"></div><div class="barra b"></div>';
         por(cd, x, yL + 34, 92, 104, false);
         gl.appendChild(cd);
       }
     }
   }
 
-  /* arranjos do corredor */
   function buque(x, y, altura){
     var g = grupo(x, y, 56, 56, 'epe');
 
@@ -225,7 +220,7 @@ export function montarCenario(cenario, { estreito, reduz }){
     var b = document.createElement('div');
     b.className = 'epe buque';
     var h = '';
-    var nFlor = estreito ? 12 : 16;
+    var nFlor = lite ? 5 : 16;
     for (var i = 0; i < nFlor; i++){
       var d = 20 + esc(26), verde = i % 3 === 0;
       h += '<i class="flor" style="width:' + d + 'px;height:' + (d * (verde ? .72 : 1)) +
@@ -238,19 +233,20 @@ export function montarCenario(cenario, { estreito, reduz }){
     por(b, x, y, 112, 104, false);
     g.appendChild(b);
   }
-  var nBuq = estreito ? 5 : 7;
+  var nBuq = lite ? 3 : 7;
   for (var i2 = 0; i2 < nBuq; i2++){
-    buque(-185, 470 + i2 * 290, 150);
-    buque(185, 470 + i2 * 290, 150);
+    buque(-185, 470 + i2 * (lite ? 480 : 290), 150);
+    buque(185, 470 + i2 * (lite ? 480 : 290), 150);
   }
 
-  /* arco floral */
   var gArco = grupo(0, 0, 280, 30, 'epe');
   var arco = document.createElement('div');
   arco.className = 'epe arco';
   var R = 212, PERNA = 150, CX = 280, ha = '', pontos = [];
-  for (var y1 = 0; y1 <= PERNA; y1 += 22){ pontos.push([-R, y1]); pontos.push([R, y1]); }
-  for (var a1 = 182; a1 >= -2; a1 -= 5){
+  var passoPerna = lite ? 40 : 22;
+  var passoArco = lite ? 12 : 5;
+  for (var y1 = 0; y1 <= PERNA; y1 += passoPerna){ pontos.push([-R, y1]); pontos.push([R, y1]); }
+  for (var a1 = 182; a1 >= -2; a1 -= passoArco){
     var rad = a1 * Math.PI / 180;
     pontos.push([Math.cos(rad) * R, PERNA + Math.sin(rad) * R]);
   }
@@ -267,7 +263,6 @@ export function montarCenario(cenario, { estreito, reduz }){
   por(arco, 0, 0, 560, 520, false);
   gArco.appendChild(arco);
 
-  /* noivos: ficam logo atrás do arco, então de qualquer lado dá para vê-los */
   var gNoivos = grupo(0, -70, 115, 30, 'epe');
   var nv = document.createElement('div');
   nv.className = 'epe noivos';
@@ -276,11 +271,9 @@ export function montarCenario(cenario, { estreito, reduz }){
   por(nv, 0, -70, 230, 264, false);
   gNoivos.appendChild(nv);
 
-  /* pétalas em volta do altar */
-  if (!reduz){
+  if (!reduz && !lite){
     var gPet = grupo(0, 450, 500, 550, 'epe');
-    var nPet = estreito ? 12 : 26;
-    for (var p2 = 0; p2 < nPet; p2++){
+    for (var p2 = 0; p2 < 26; p2++){
       var pt = document.createElement('div');
       pt.className = 'epe petala';
       pt.style.animationDuration = (7 + esc(7)).toFixed(2) + 's';

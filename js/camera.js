@@ -33,9 +33,11 @@ const JANELAS = [
 const PERSP_BASE = 1500;   // recalculado em medir() a cada altura de tela
 const H_REF = 800;         // referência usada ao calibrar os pontos-chave
 
-export function criarCamera(el, pecas){
+export function criarCamera(el, pecas, opts){
   var PERSP = PERSP_BASE, H = 800, kW = 1;
   var giroAnt = null, tombAnt = null;
+  var leve = !!(opts && opts.leve);
+  var pecasTick = 0;
 
   var cam = {
     max: 1,
@@ -109,6 +111,8 @@ export function criarCamera(el, pecas){
     }
 
     for (var j = 0; j < pecas.length; j++){
+      /* no celular: atualiza opacidade a cada 2 frames — menos thrash no Safari */
+      if (leve && ((pecasTick + j) & 1)) continue;
       var q = pecas[j], op = 1;
       if (corta){
         // profundidade da extremidade mais distante: some só quando a peça inteira saiu
@@ -122,6 +126,7 @@ export function criarCamera(el, pecas){
         q.el.style.opacity = op >= 1 ? '' : op.toFixed(2);
       }
     }
+    pecasTick++;
 
     /* ── dissolve foto→desenho ─────────────────────────────────────────
        Opacidades complementares (sempre algo no quadro), foto vira “desenho”
@@ -150,14 +155,20 @@ export function criarCamera(el, pecas){
     var opFoto = Math.pow(1 - tFoto, 2.6);
     el.aerea.style.opacity = opFoto.toFixed(4);
 
-    /* morfagem visual rumo ao ilustrado (cremoso / menos foto) */
-    var blurPx = 2 + 14 * suave(faixa(p, .06, .34));
+    /* morfagem visual — blur só no desktop (no iOS derruba a aba) */
     var sat = 1 - .72 * tMix;
     var bright = 1 + .22 * tMix;
     var contrast = 1 - .12 * tMix;
-    el.aerea.style.filter =
-      'brightness(' + bright.toFixed(3) + ') saturate(' + sat.toFixed(3) +
-      ') contrast(' + contrast.toFixed(3) + ') blur(' + blurPx.toFixed(2) + 'px)';
+    if (leve){
+      el.aerea.style.filter =
+        'brightness(' + bright.toFixed(3) + ') saturate(' + sat.toFixed(3) +
+        ') contrast(' + contrast.toFixed(3) + ')';
+    } else {
+      var blurPx = 2 + 14 * suave(faixa(p, .06, .34));
+      el.aerea.style.filter =
+        'brightness(' + bright.toFixed(3) + ') saturate(' + sat.toFixed(3) +
+        ') contrast(' + contrast.toFixed(3) + ') blur(' + blurPx.toFixed(2) + 'px)';
+    }
 
     el.aerea.style.visibility = opFoto < .003 ? 'hidden' : 'visible';
     el.aerea.style.pointerEvents = 'none';
@@ -189,9 +200,21 @@ export function criarCamera(el, pecas){
       var saida = suave2(h);
       var soft = suave2(faixa(h, 0, .55));
       el.palco.style.opacity = (1 - saida * .72).toFixed(4);
-      el.palco.style.filter = 'blur(' + (soft * 5.5).toFixed(2) + 'px)';
+      /* blur no palco inteiro mata Safari mobile — só opacity/scale no leve */
+      if (leve){
+        el.palco.style.filter = 'none';
+      } else {
+        el.palco.style.filter = 'blur(' + (soft * 5.5).toFixed(2) + 'px)';
+      }
       el.palco.style.transform = 'scale(' + (1 + soft * .028).toFixed(4) + ')';
       el.palco.style.pointerEvents = 'none';
+      /* libera GPU quando o editorial assumiu */
+      if (h > .92){
+        el.palco.style.visibility = 'hidden';
+        el.palco.style.willChange = 'auto';
+      } else {
+        el.palco.style.visibility = '';
+      }
     }
     if (el.vinheta){
       el.vinheta.style.opacity = (suave2(faixa(h, .05, .45)) * .55).toFixed(3);

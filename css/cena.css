@@ -253,9 +253,33 @@
   .hud .alt{left:18px}
   .hud .regua{height:110px}
   .hud .valor{font-size:20px}
-  .trilho{height:640vh}
+  .trilho{height:520vh}
   .ponte-site{bottom:6vh}
+  .ponte-site a{backdrop-filter:none}
 }
+
+/* modo leve (celular / toque): corta o que derruba o Safari */
+html.modo-leve .aerea,
+html.modo-leve .palco,
+html.modo-leve .lente,
+html.modo-leve .mundo,
+html.modo-leve .bruma{
+  will-change:auto!important
+}
+html.modo-leve .petala,
+html.modo-leve .lanterna-fogo,
+html.modo-leve .lanterna-brilho,
+html.modo-leve .rolar span,
+html.modo-leve .hud .ponto{
+  animation:none!important
+}
+html.modo-leve .lanterna-fogo{opacity:.9}
+html.modo-leve .fundo-vivo,
+html.modo-leve .luz-rastro,
+html.modo-leve .raios{display:none!important}
+html.modo-leve .noivos .veu{filter:none}
+html.modo-leve .trilho{height:480vh}
+
 @media (prefers-reduced-motion:reduce){
   .petala,.rolar span,.hud .ponto,.lanterna-fogo,.lanterna-brilho{animation:none!important}
   .lanterna-fogo,.lanterna-brilho{opacity:.85}

@@ -1,15 +1,17 @@
 /* fundo vivo + luz com rastro no conteúdo editorial */
 
+import { reduz, leve } from './device.js';
+
 export function iniciarAtmosfera(){
   const main = document.getElementById('conteudo');
   if (!main) return;
 
-  const reduz = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const fino = window.matchMedia('(pointer: fine)').matches;
 
-  if (!reduz) main.classList.add('com-fundo-vivo');
+  /* no celular, orbes com blur matam a GPU — pula */
+  if (!reduz && !leve) main.classList.add('com-fundo-vivo');
 
-  if (reduz || !fino) return;
+  if (reduz || !fino || leve) return;
 
   const canvas = document.getElementById('luzRastro');
   if (!canvas || !canvas.getContext) return;
