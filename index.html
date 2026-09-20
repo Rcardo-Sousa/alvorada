@@ -22,12 +22,34 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/base.css?v=impeccable-10">
-<link rel="stylesheet" href="css/cena.css?v=impeccable-10">
-<link rel="stylesheet" href="css/site.css?v=impeccable-10">
-<script type="module" src="js/main.js?v=10"></script>
+<link rel="stylesheet" href="css/base.css?v=impeccable-11">
+<link rel="stylesheet" href="css/cena.css?v=impeccable-11">
+<link rel="stylesheet" href="css/site.css?v=impeccable-11">
+<script type="module" src="js/main.js?v=11"></script>
 </head>
 <body>
+
+<!-- abertura leve no mobile (sem 3D): primeira tela → scroll → site -->
+<section class="porta-mobile" id="portaMobile" aria-label="Abertura Alvorada">
+  <div class="porta-cena">
+    <img
+      class="porta-foto"
+      src="assets/images/aerea.jpg"
+      alt="Vista aérea de uma cerimônia de casamento ao ar livre."
+      width="1600"
+      height="1067"
+      decoding="async"
+      fetchpriority="high"
+    >
+    <div class="porta-velo" aria-hidden="true"></div>
+    <div class="porta-marca">
+      <h1>Alvorada</h1>
+      <p>cerimonial e celebrações</p>
+    </div>
+    <p class="porta-rolar">role para descer<span aria-hidden="true"></span></p>
+  </div>
+  <div class="porta-trilho" id="portaTrilho" aria-hidden="true"></div>
+</section>
 
 <div id="drone-slot"></div>
 <template id="tpl-drone">

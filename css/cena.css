@@ -258,6 +258,69 @@
   .ponte-site a{backdrop-filter:none}
 }
 
+/* ── porta mobile: primeira tela estática → scroll revela o site ── */
+.porta-mobile{display:none}
+html.sem-drone .porta-mobile{display:block;position:relative;z-index:1}
+html.sem-drone .porta-mobile[hidden]{display:none!important}
+.porta-cena{
+  position:fixed;inset:0;z-index:20;overflow:hidden;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  pointer-events:none;
+  opacity:calc(1 - var(--p, 0));
+  transform:scale(calc(1 + var(--p, 0) * .04));
+  will-change:opacity,transform;
+  transition:none
+}
+.porta-mobile.porta-feita .porta-cena{
+  visibility:hidden;opacity:0;transform:none;will-change:auto
+}
+.porta-foto{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;object-position:center 40%;
+  display:block
+}
+.porta-velo{
+  position:absolute;inset:0;
+  background:
+    linear-gradient(180deg,rgba(18,14,12,.28) 0%,rgba(18,14,12,.12) 38%,rgba(18,14,12,.45) 100%),
+    radial-gradient(ellipse 80% 55% at 50% 42%,transparent 30%,rgba(12,10,8,.35) 100%)
+}
+.porta-marca{
+  position:relative;z-index:1;text-align:center;
+  color:#f7f1e8;padding:0 24px;
+  text-shadow:0 2px 28px rgba(0,0,0,.45),0 1px 3px rgba(0,0,0,.35);
+  transform:translateY(calc(var(--p, 0) * -18px));
+  opacity:calc(1 - var(--p, 0) * 1.15)
+}
+.porta-marca h1{
+  margin:0;font:400 clamp(48px,14vw,72px)/1 var(--serif);
+  letter-spacing:.04em
+}
+.porta-marca p{
+  margin:16px 0 0;font:400 clamp(13px,3.4vw,16px)/1.2 var(--sans);
+  letter-spacing:.28em;text-transform:lowercase;opacity:.92
+}
+.porta-rolar{
+  position:absolute;left:50%;bottom:max(28px,env(safe-area-inset-bottom,0px) + 18px);
+  transform:translateX(-50%);z-index:1;margin:0;
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+  color:rgba(247,241,232,.88);font-size:10px;letter-spacing:.28em;text-transform:uppercase;
+  text-shadow:0 1px 10px rgba(0,0,0,.4);
+  opacity:calc(1 - var(--p, 0) * 2)
+}
+.porta-rolar span{
+  display:block;width:1px;height:42px;
+  background:linear-gradient(rgba(247,241,232,.9),transparent);
+  animation:desce 2.4s ease-in-out infinite
+}
+.porta-trilho{height:100vh;pointer-events:none}
+
+@media (prefers-reduced-motion:reduce){
+  .porta-cena{transform:none;will-change:auto}
+  .porta-rolar span{animation:none}
+  .porta-mobile{display:none!important}
+}
+
 /* sem drone no celular — some antes do JS e libera memória */
 html.sem-drone .palco,
 html.sem-drone .aerea,
@@ -277,12 +340,12 @@ html.sem-drone .fundo-vivo{
   content-visibility:hidden
 }
 html.sem-drone .trilho{height:0!important;min-height:0!important;margin:0!important;padding:0!important}
-html.sem-drone body{background:var(--papel, #f7f2eb)}
+html.sem-drone body{background:#1a1410}
+html.sem-drone.porta-aberta body{background:var(--papel, #f7f2eb)}
 html.sem-drone #conteudo{
-  position:relative;z-index:10;
-  --e:1; --e-papel:1; --e-faixa:1; --e-contexto:1;
-  --e-titulo1:1; --e-titulo2:1; --e-foto:1; --e-menu:1;
-  --e-rodape:1; --e-tracos:1;
+  position:relative;z-index:10
+}
+html.sem-drone #conteudo.entrada-pronta{
   background:var(--papel);box-shadow:var(--sombra-main)
 }
 

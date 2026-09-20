@@ -1,8 +1,8 @@
 /* liga o cenário à câmera e deixa o scroll conduzir o sobrevoo */
 
 import { lim } from './utils.js';
-import { leve } from './device.js';
-import { iniciarExperiencia, pintarEntrada } from './experiencia.js';
+import { leve, reduz } from './device.js';
+import { iniciarExperiencia, pintarEntrada, pintarHandoff } from './experiencia.js';
 import { iniciarNarrativa, pintarNarrativa } from './narrativa.js';
 import { iniciarTema } from './tema.js';
 
@@ -13,8 +13,7 @@ if (leve) document.documentElement.classList.add('sem-drone');
 
 iniciarTema();
 
-/* ── celular / toque: sem cena 3D — o Safari derruba a aba com o sobrevoo ── */
-if (leve){
+function limparDroneResidual(){
   const lixo = [
     'palco', 'aerea', 'raios', 'bruma', 'vinheta',
     'hud', 'rolar', 'trilho', 'ponte', 'luzRastro'
@@ -29,23 +28,69 @@ if (leve){
     n.remove();
   });
   document.querySelectorAll('.legendas, .fundo-vivo').forEach((n) => n.remove());
+}
+
+function revelarSiteDireto(main){
+  if (!main) return;
+  main.classList.add('entrada-pronta', 'menu-pronta', 'entrada-ativa', 'site-entrada');
+  [
+    '--e', '--e-papel', '--e-faixa', '--e-contexto',
+    '--e-titulo1', '--e-titulo2', '--e-foto', '--e-menu',
+    '--e-rodape', '--e-tracos'
+  ].forEach((v) => main.style.setProperty(v, '1'));
+  document.documentElement.classList.add('porta-aberta');
+}
+
+/* ── celular / toque: sem cena 3D — o Safari derruba a aba com o sobrevoo ── */
+if (leve){
+  limparDroneResidual();
 
   const main = document.getElementById('conteudo');
-  if (main){
-    main.classList.add('entrada-pronta', 'menu-pronta', 'entrada-ativa', 'site-entrada');
-    [
-      '--e', '--e-papel', '--e-faixa', '--e-contexto',
-      '--e-titulo1', '--e-titulo2', '--e-foto', '--e-menu',
-      '--e-rodape', '--e-tracos'
-    ].forEach((v) => main.style.setProperty(v, '1'));
-  }
+  const porta = document.getElementById('portaMobile');
+  const portaTrilho = document.getElementById('portaTrilho');
 
   iniciarExperiencia();
-  iniciarNarrativa(document.getElementById('conteudo'));
-  pintarNarrativa();
-  window.addEventListener('scroll', pintarNarrativa, { passive: true });
-  window.addEventListener('resize', pintarNarrativa);
+  iniciarNarrativa(main);
+
+  /* reduced motion ou hash interno: pula a porta */
+  const pularPorta = reduz || (location.hash && location.hash !== '#conteudo' && location.hash !== '#');
+
+  if (pularPorta || !porta || !portaTrilho){
+    if (porta) porta.hidden = true;
+    revelarSiteDireto(main);
+    pintarNarrativa();
+    window.addEventListener('scroll', pintarNarrativa, { passive: true });
+    window.addEventListener('resize', pintarNarrativa);
+  } else {
+    porta.hidden = false;
+    porta.style.setProperty('--p', '0');
+    pintarHandoff(0);
+
+    function camMax(){
+      return Math.max(portaTrilho.offsetHeight - window.innerHeight * .05, 1);
+    }
+
+    function pintarPorta(){
+      const y = window.scrollY;
+      const max = camMax();
+      const p = lim(y / max, 0, 1);
+      /* site nasce junto com a saída da porta */
+      const handoff = lim((p - .12) / .78, 0, 1);
+      porta.style.setProperty('--p', p.toFixed(4));
+      porta.classList.toggle('porta-feita', p > .94);
+      document.documentElement.classList.toggle('porta-aberta', handoff > .4);
+      pintarHandoff(handoff);
+      if (handoff > .15) pintarNarrativa();
+    }
+
+    window.addEventListener('scroll', pintarPorta, { passive: true });
+    window.addEventListener('resize', pintarPorta);
+    pintarPorta();
+  }
 } else {
+  const porta = document.getElementById('portaMobile');
+  if (porta) porta.remove();
+
   /* módulos 3D só no desktop — não parseiam no Safari mobile */
   Promise.all([
     import('./cenario.js'),

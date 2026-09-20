@@ -66,6 +66,16 @@ export function pintarEntrada(scrollY, camMax){
   aplicarCamadas(h);
 }
 
+/** Progresso 0–1 direto (porta mobile / handoffs curtos). */
+export function pintarHandoff(progresso){
+  if (!pronto || !main) return;
+  if (reduz){
+    aplicarCamadas(1);
+    return;
+  }
+  aplicarCamadas(lim(progresso, 0, 1));
+}
+
 export function iniciarExperiencia(){
   main = document.getElementById('conteudo');
   trilho = document.getElementById('trilho');
