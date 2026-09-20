@@ -74,13 +74,13 @@ if (leve){
       const y = window.scrollY;
       const max = camMax();
       const p = lim(y / max, 0, 1);
-      /* site nasce junto com a saída da porta */
-      const handoff = lim((p - .12) / .78, 0, 1);
+      /* handoff quase junto com o fade — sem “vão” longo de tela vazia */
+      const handoff = lim((p - .02) / .72, 0, 1);
       porta.style.setProperty('--p', p.toFixed(4));
-      porta.classList.toggle('porta-feita', p > .94);
-      document.documentElement.classList.toggle('porta-aberta', handoff > .4);
+      porta.classList.toggle('porta-feita', p > .9);
+      document.documentElement.classList.toggle('porta-aberta', handoff > .25);
       pintarHandoff(handoff);
-      if (handoff > .15) pintarNarrativa();
+      if (handoff > .1) pintarNarrativa();
     }
 
     window.addEventListener('scroll', pintarPorta, { passive: true });

@@ -759,6 +759,29 @@ html.sem-drone .projeto-imagem img,
 html.sem-drone .depoimento-foto img,
 html.sem-drone .abertura-foto img{will-change:auto}
 
+/* mobile: abertura mais próxima do topo — menos “vão” no handoff */
+html.sem-drone .abertura{
+  padding-top:clamp(20px,4.5vw,36px);
+  padding-bottom:clamp(64px,12vw,120px)
+}
+html.sem-drone .abertura>.sobretitulo{margin-bottom:clamp(18px,4vw,28px)}
+html.sem-drone .camada-titulo1 .linha-mascara{
+  transform:translate3d(0, calc((1 - var(--e-titulo1)) * 32px), 0)
+}
+html.sem-drone .camada-titulo2 .linha-mascara{
+  transform:translate3d(0, calc((1 - var(--e-titulo2)) * 32px), 0)
+}
+html.sem-drone .camada-contexto{
+  transform:translate3d(0, calc((1 - var(--e-contexto)) * 8px), 0)
+}
+html.sem-drone .camada-foto{
+  transform:translate3d(0, calc((1 - var(--e-foto)) * 12px), 0)
+    scale(calc(.99 + .01 * var(--e-foto)))
+}
+html.sem-drone .abertura-rodape{
+  margin-top:clamp(36px,8vw,64px)
+}
+
 @media (max-width:900px){
   .menu-links>a:not(.menu-contato){display:none}
   .abertura-cena{grid-template-columns:1fr;gap:clamp(36px,8vw,56px)}

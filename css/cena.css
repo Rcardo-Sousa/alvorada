@@ -313,7 +313,7 @@ html.sem-drone .porta-mobile[hidden]{display:none!important}
   background:linear-gradient(rgba(247,241,232,.9),transparent);
   animation:desce 2.4s ease-in-out infinite
 }
-.porta-trilho{height:100vh;pointer-events:none}
+.porta-trilho{height:58vh;pointer-events:none}
 
 @media (prefers-reduced-motion:reduce){
   .porta-cena{transform:none;will-change:auto}
