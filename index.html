@@ -22,13 +22,15 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/base.css?v=impeccable-9">
-<link rel="stylesheet" href="css/cena.css?v=impeccable-9">
-<link rel="stylesheet" href="css/site.css?v=impeccable-9">
-<script type="module" src="js/main.js?v=9"></script>
+<link rel="stylesheet" href="css/base.css?v=impeccable-10">
+<link rel="stylesheet" href="css/cena.css?v=impeccable-10">
+<link rel="stylesheet" href="css/site.css?v=impeccable-10">
+<script type="module" src="js/main.js?v=10"></script>
 </head>
 <body>
 
+<div id="drone-slot"></div>
+<template id="tpl-drone">
 <div class="palco" id="palco" aria-hidden="true">
   <div class="lente" id="lente">
     <div class="camera" id="camera">
@@ -92,6 +94,22 @@
 <div class="trilho" id="trilho"></div>
 
 <canvas class="luz-rastro" id="luzRastro" aria-hidden="true"></canvas>
+</template>
+<script>
+/* no celular o markup 3D nunca entra no DOM — evita crash do Safari */
+(function () {
+  var tpl = document.getElementById('tpl-drone');
+  var slot = document.getElementById('drone-slot');
+  if (!tpl || !slot) return;
+  if (document.documentElement.classList.contains('sem-drone')) {
+    tpl.remove();
+    slot.remove();
+    return;
+  }
+  slot.replaceWith(tpl.content.cloneNode(true));
+  tpl.remove();
+})();
+</script>
 
 <main id="conteudo" class="site-entrada handoff-scroll">
   <div class="fundo-vivo" aria-hidden="true">
@@ -103,6 +121,14 @@
     <span class="fundo-faixa f2"></span>
     <span class="fundo-faixa f3"></span>
   </div>
+<script>
+(function(){
+  if (!document.documentElement.classList.contains('sem-drone')) return;
+  var fv = document.querySelector('.fundo-vivo');
+  if (fv) fv.remove();
+})();
+</script>
+
   <i class="faixa"></i>
   <div class="menu-reserva" aria-hidden="true"></div>
 

@@ -1,13 +1,10 @@
 /* liga o cenário à câmera e deixa o scroll conduzir o sobrevoo */
 
 import { lim } from './utils.js';
-import { reduz, leve, estreito } from './device.js';
-import { montarCenario } from './cenario.js';
-import { criarCamera } from './camera.js';
+import { leve } from './device.js';
 import { iniciarExperiencia, pintarEntrada } from './experiencia.js';
 import { iniciarNarrativa, pintarNarrativa } from './narrativa.js';
 import { iniciarTema } from './tema.js';
-import { iniciarAtmosfera } from './atmosfera.js';
 
 const pega = (id) => document.getElementById(id);
 
@@ -20,7 +17,7 @@ iniciarTema();
 if (leve){
   const lixo = [
     'palco', 'aerea', 'raios', 'bruma', 'vinheta',
-    'hud', 'rolar', 'trilho', 'ponte'
+    'hud', 'rolar', 'trilho', 'ponte', 'luzRastro'
   ];
   lixo.forEach((id) => {
     const n = pega(id);
@@ -31,7 +28,7 @@ if (leve){
     }
     n.remove();
   });
-  document.querySelectorAll('.legendas').forEach((n) => n.remove());
+  document.querySelectorAll('.legendas, .fundo-vivo').forEach((n) => n.remove());
 
   const main = document.getElementById('conteudo');
   if (main){
@@ -45,88 +42,94 @@ if (leve){
 
   iniciarExperiencia();
   iniciarNarrativa(document.getElementById('conteudo'));
-  /* sem atmosfera pesada no mobile */
   pintarNarrativa();
   window.addEventListener('scroll', pintarNarrativa, { passive: true });
   window.addEventListener('resize', pintarNarrativa);
 } else {
-  const el = {
-    palco: pega('palco'),
-    chao: pega('chao'),
-    cenario: pega('cenario'),
-    mundo: pega('mundo'),
-    wrap: pega('mundoWrap'),
-    camera: pega('camera'),
-    lente: pega('lente'),
-    aerea: pega('aerea'),
-    bruma: pega('bruma'),
-    vinheta: pega('vinheta'),
-    raios: pega('raios'),
-    hud: pega('hud'),
-    altValor: pega('altValor'),
-    rolar: pega('rolar'),
-    trilho: pega('trilho'),
-    ponte: pega('ponte'),
-    cenas: [1, 2, 3, 4, 5].map((n) => pega('cena' + n))
-  };
+  /* módulos 3D só no desktop — não parseiam no Safari mobile */
+  Promise.all([
+    import('./cenario.js'),
+    import('./camera.js'),
+    import('./atmosfera.js'),
+    import('./device.js')
+  ]).then(([{ montarCenario }, { criarCamera }, { iniciarAtmosfera }, { estreito, reduz }]) => {
+    const el = {
+      palco: pega('palco'),
+      chao: pega('chao'),
+      cenario: pega('cenario'),
+      mundo: pega('mundo'),
+      wrap: pega('mundoWrap'),
+      camera: pega('camera'),
+      lente: pega('lente'),
+      aerea: pega('aerea'),
+      bruma: pega('bruma'),
+      vinheta: pega('vinheta'),
+      raios: pega('raios'),
+      hud: pega('hud'),
+      altValor: pega('altValor'),
+      rolar: pega('rolar'),
+      trilho: pega('trilho'),
+      ponte: pega('ponte'),
+      cenas: [1, 2, 3, 4, 5].map((n) => pega('cena' + n))
+    };
 
-  /* carrega a aérea só no desktop */
-  if (el.aerea && el.aerea.dataset.src){
-    el.aerea.src = el.aerea.dataset.src;
-  }
+    if (el.aerea && el.aerea.dataset.src){
+      el.aerea.src = el.aerea.dataset.src;
+    }
 
-  const pecas = montarCenario(el.cenario, { estreito, reduz, leve: false });
-  const cam = criarCamera(el, pecas, { leve: false });
+    const pecas = montarCenario(el.cenario, { estreito, reduz, leve: false });
+    const cam = criarCamera(el, pecas, { leve: false });
 
-  let alvo = 0, atual = 0;
-  let rodando = false;
-  const lerpRate = reduz ? 1 : .065;
+    let alvo = 0, atual = 0;
+    let rodando = false;
+    const lerpRate = reduz ? 1 : .065;
 
-  function spanHandoff(){
-    return window.innerHeight * 1.5;
-  }
+    function spanHandoff(){
+      return window.innerHeight * 1.5;
+    }
 
-  function tick(){
-    rodando = true;
-    atual += (alvo - atual) * lerpRate;
-    if (Math.abs(alvo - atual) < .15) atual = alvo;
+    function tick(){
+      rodando = true;
+      atual += (alvo - atual) * lerpRate;
+      if (Math.abs(alvo - atual) < .15) atual = alvo;
 
-    const p = lim(atual / cam.max, 0, 1);
-    const handoff = lim((atual - cam.max) / spanHandoff(), 0, 1);
+      const p = lim(atual / cam.max, 0, 1);
+      const handoff = lim((atual - cam.max) / spanHandoff(), 0, 1);
 
-    cam.pintar(p, handoff);
-    pintarEntrada(atual, cam.max);
-    if (handoff > .02 || atual > cam.max * .9) pintarNarrativa();
+      cam.pintar(p, handoff);
+      pintarEntrada(atual, cam.max);
+      if (handoff > .02 || atual > cam.max * .9) pintarNarrativa();
 
-    if (atual !== alvo) requestAnimationFrame(tick);
-    else rodando = false;
-  }
+      if (atual !== alvo) requestAnimationFrame(tick);
+      else rodando = false;
+    }
 
-  function pedirFrame(){
-    if (!rodando) requestAnimationFrame(tick);
-  }
+    function pedirFrame(){
+      if (!rodando) requestAnimationFrame(tick);
+    }
 
-  window.addEventListener('scroll', () => {
-    alvo = window.scrollY;
-    pedirFrame();
-  }, { passive: true });
+    window.addEventListener('scroll', () => {
+      alvo = window.scrollY;
+      pedirFrame();
+    }, { passive: true });
 
-  window.addEventListener('resize', () => {
+    window.addEventListener('resize', () => {
+      cam.medir();
+      pedirFrame();
+    });
+
     cam.medir();
+    alvo = atual = window.scrollY;
+
+    iniciarExperiencia();
+    iniciarNarrativa(document.getElementById('conteudo'));
+    iniciarAtmosfera();
+
+    const p0 = lim(atual / cam.max, 0, 1);
+    const h0 = lim((atual - cam.max) / spanHandoff(), 0, 1);
+    cam.pintar(p0, h0);
+    pintarEntrada(atual, cam.max);
+    pintarNarrativa();
     pedirFrame();
   });
-
-  cam.medir();
-  alvo = atual = window.scrollY;
-
-  iniciarExperiencia();
-  iniciarNarrativa(document.getElementById('conteudo'));
-  iniciarAtmosfera();
-
-  const p0 = lim(atual / cam.max, 0, 1);
-  const h0 = lim((atual - cam.max) / spanHandoff(), 0, 1);
-  cam.pintar(p0, h0);
-  pintarEntrada(atual, cam.max);
-  pintarNarrativa();
-  pedirFrame();
 }

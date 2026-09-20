@@ -745,6 +745,20 @@ main > nav{
 
 .imagem-editorial img,.projeto-imagem img,.depoimento-foto img,.abertura-foto img{will-change:transform}
 
+/* Safari mobile: sem blur/compositor pesado no editorial */
+html.sem-drone .menu-site,
+html.sem-drone main.menu-fixo .menu-site{
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important
+}
+html.sem-drone .fundo-vivo,
+html.sem-drone .fundo-orbita,
+html.sem-drone .fundo-faixa{display:none!important}
+html.sem-drone .imagem-editorial img,
+html.sem-drone .projeto-imagem img,
+html.sem-drone .depoimento-foto img,
+html.sem-drone .abertura-foto img{will-change:auto}
+
 @media (max-width:900px){
   .menu-links>a:not(.menu-contato){display:none}
   .abertura-cena{grid-template-columns:1fr;gap:clamp(36px,8vw,56px)}
